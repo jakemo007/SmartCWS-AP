@@ -1,0 +1,52 @@
+ap_cws_portal/
+│
+├── ap_cws_portal/              # Main project directory (settings, URLs)
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│
+├── accounts/                   # User authentication and management
+│   ├── migrations/
+│   ├── models.py
+│   ├── views.py
+│   ├── serializers.py
+│   ├── urls.py
+│
+├── spaces/                     # Co-working space management
+│   ├── migrations/
+│   ├── models.py
+│   ├── views.py
+│   ├── serializers.py
+│   ├── urls.py
+│
+├── bookings/                   # Booking system
+│   ├── migrations/
+│   ├── models.py
+│   ├── views.py
+│   ├── serializers.py
+│   ├── urls.py
+│
+├── verification/               # Verification workflow for ULB & approvals
+│   ├── migrations/
+│   ├── models.py
+│   ├── views.py
+│   ├── serializers.py
+│   ├── urls.py
+│
+├── analytics/                  # Dashboards and reports
+│   ├── migrations/
+│   ├── views.py
+│   ├── serializers.py
+│   ├── urls.py
+│
+├── notifications/              # Real-time notifications
+│   ├── tasks.py                # Celery tasks
+│   ├── signals.py
+│
+├── media/                      # Media files for uploads
+├── static/                     # Static files (CSS, JS)
+│
+├── manage.py                   # Django command-line utility
+└── requirements.txt            # Project dependencies

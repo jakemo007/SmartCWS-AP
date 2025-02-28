@@ -1,4 +1,4 @@
-# 🚀 AP-CWS-Portal
+# 🚀 SmartCWS-AP
 
 A comprehensive platform for managing **Co-Working Spaces (CWS)** across Andhra Pradesh, developed for the **Information Technology, Electronics & Communications (ITE&C) Department** of the Government of Andhra Pradesh (GoAP).
 
@@ -38,7 +38,7 @@ This portal enables seamless registration, booking, and management of coworking 
 
 **Backend:**
 
-- Python 3.x
+- Python 3.9
 - Django
 - Django Rest Framework (DRF)
 - Celery (For background task processing)
@@ -71,15 +71,15 @@ This portal enables seamless registration, booking, and management of coworking 
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/ap-cws-portal.git
-cd ap-cws-portal
+git clone https://github.com/jakemo007/SmartCWS-AP.git
+cd SmartCWS-AP
 ```
 
 ### 2️⃣ Set Up a Virtual Environment
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate  # For Windows: venv\Scripts\activate
+python3 -m venv .venv
+source .venv/bin/activate  # For Windows: venv\Scripts\activate
 ```
 
 ### 3️⃣ Install Dependencies
@@ -96,7 +96,7 @@ Create a `.env` file and configure your environment variables:
 DEBUG=True
 SECRET_KEY=your_secret_key
 DATABASE_URL=postgres://username:password@localhost:5432/dbname
-REDIS_URL=redis://localhost:6379
+REDIS_URL=redis://localhost:6379/0
 ```
 
 ### 5️⃣ Run Migrations
