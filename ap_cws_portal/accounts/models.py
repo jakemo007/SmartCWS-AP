@@ -1,31 +1,21 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 
 class CustomUser(AbstractUser):
-    USER_ROLES = [
-        ('ADMIN', 'Admin'),
-        ('PROVIDER', 'Space Provider'),
-        ('IT_FIRM', 'IT Firm'),
-        ('ULB_OFFICER', 'Urban Local Body Officer'),
-        ('DEVELOPER', 'CWS Developer'),
+    ROLE_CHOICES = [
+        ("admin", "Admin"),
+        ("provider", "Space Provider"),
+        ("it_firm", "IT Firm"),
     ]
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="it_firm")
+    is_verified = models.BooleanField(default=False)  # ✅ Admin verifies providers
 
-    role = models.CharField(max_length=20, choices=USER_ROLES, default='IT_FIRM')
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
-    organization = models.CharField(max_length=255, blank=True, null=True)
-    is_verified = models.BooleanField(default=False)
-
-    # Fix reverse accessor clashes by adding `related_name`
     groups = models.ManyToManyField(
-        "auth.Group",
-        related_name="customuser_groups",
-        blank=True
+        Group, related_name="customuser_accounts_groups", blank=True  # ✅ Fix conflict
     )
     user_permissions = models.ManyToManyField(
-        "auth.Permission",
-        related_name="customuser_permissions",
-        blank=True
+        Permission, related_name="customuser_accounts_permissions", blank=True  # ✅ Fix conflict
     )
 
     def __str__(self):
-        return f"{self.username} ({self.role})"
+        return self.username

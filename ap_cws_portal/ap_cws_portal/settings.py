@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     # Custom apps
     'accounts',
     'spaces',
-    'bookings',
+    # 'bookings',
     'verification',
     'analytics',
     'notifications',

@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import SpaceVerification
+from .models import VerificationRequest
 
-class SpaceVerificationSerializer(serializers.ModelSerializer):
+class VerificationRequestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SpaceVerification
-        fields = '__all__'
+        model = VerificationRequest
+        fields = "__all__"

@@ -1,7 +1,8 @@
-from rest_framework import generics
-from .models import SpaceVerification
-from .serializers import SpaceVerificationSerializer
+from rest_framework import viewsets, permissions
+from .models import VerificationRequest
+from .serializers import VerificationRequestSerializer
 
-class SpaceVerificationListView(generics.ListAPIView):
-    queryset = SpaceVerification.objects.all()
-    serializer_class = SpaceVerificationSerializer
+class VerificationRequestViewSet(viewsets.ModelViewSet):
+    queryset = VerificationRequest.objects.all()
+    serializer_class = VerificationRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]

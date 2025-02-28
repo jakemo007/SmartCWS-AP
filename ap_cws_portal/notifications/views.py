@@ -1,11 +1,11 @@
-from rest_framework import generics
+from rest_framework import viewsets, permissions
 from .models import Notification
 from .serializers import NotificationSerializer
-from rest_framework.permissions import IsAuthenticated
 
-class NotificationListView(generics.ListAPIView):
+class NotificationViewSet(viewsets.ModelViewSet):
+    queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Notification.objects.filter(user=self.request.user)
+        return self.queryset.filter(recipient=self.request.user)

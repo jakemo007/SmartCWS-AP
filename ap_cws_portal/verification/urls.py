@@ -1,6 +1,10 @@
-from django.urls import path
-from .views import SpaceVerificationListView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import VerificationRequestViewSet
+
+router = DefaultRouter()
+router.register(r'verifications', VerificationRequestViewSet, basename='verifications')
 
 urlpatterns = [
-    path('', SpaceVerificationListView.as_view(), name='space-verification-list'),
+    path("", include(router.urls)),
 ]

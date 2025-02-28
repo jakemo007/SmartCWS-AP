@@ -1,7 +1,16 @@
 from rest_framework import serializers
-from .models import AnalyticsReport
+from .models import BookingAnalytics, SpaceOccupancy
 
-class AnalyticsReportSerializer(serializers.ModelSerializer):
+# ✅ Booking Analytics Serializer
+class BookingAnalyticsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AnalyticsReport
-        fields = '__all__'
+        model = BookingAnalytics
+        fields = "__all__"
+        read_only_fields = ["created_at"]
+
+# ✅ Space Occupancy Serializer
+class SpaceOccupancySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpaceOccupancy
+        fields = "__all__"
+        read_only_fields = ["updated_at"]

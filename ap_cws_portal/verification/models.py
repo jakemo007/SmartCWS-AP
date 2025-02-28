@@ -1,16 +1,11 @@
 from django.db import models
-from spaces.models import CoworkingSpace
+from accounts.models import CustomUser
 
-class SpaceVerification(models.Model):
-    space = models.OneToOneField(CoworkingSpace, on_delete=models.CASCADE)
-    verified_by = models.CharField(max_length=255)
-    verification_status = models.CharField(max_length=50, choices=[
-        ('PENDING', 'Pending'),
-        ('APPROVED', 'Approved'),
-        ('REJECTED', 'Rejected')
-    ])
-    comments = models.TextField(blank=True, null=True)
-    verified_at = models.DateTimeField(auto_now=True)
+class VerificationRequest(models.Model):
+    provider = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    document = models.FileField(upload_to="verification/")
+    status = models.CharField(max_length=20, choices=[("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected")])
+    verified_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"Verification for {self.space.name}"
+        return f"Verification for {self.provider.username} - {self.status}"
