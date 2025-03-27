@@ -10,6 +10,7 @@ urlpatterns = [
     path("api/verification/", include("verification.urls")),  # ✅ Space Provider Verification
     path("api/analytics/", include("analytics.urls")),  # ✅ Seat Occupancy & Booking Reports
     path("api/notifications/", include("notifications.urls")),  # ✅ Notifications API
+    path("api/api-auth/", include("rest_framework.urls")),  # ✅ API UI
 ]
 
 # ✅ Serve media files (For document uploads like approval documents)
