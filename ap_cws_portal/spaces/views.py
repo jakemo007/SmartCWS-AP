@@ -2,8 +2,9 @@ from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Sum
-from .models import SpaceProvider, ULBVerification, SpaceDetails, Booking
+from .models import SpaceProvider,  SpaceDetails, Booking
 from .serializers import SpaceProviderSerializer, ULBVerificationSerializer, SpaceDetailsSerializer, BookingSerializer
+from ulb_verification.models import ULBVerification
 
 # ✅ Space Provider API
 class SpaceProviderViewSet(viewsets.ModelViewSet):

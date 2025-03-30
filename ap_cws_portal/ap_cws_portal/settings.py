@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+# from ap_cws_portal.audit.models import AuditLog
+
 load_dotenv() 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,18 +83,42 @@ INSTALLED_APPS = [
     'verification',
     'analytics',
     'notifications',
+    'ulb_verification',
+    'government_dashboard',
+    'integrations',
+    'audit',
+    'localization',
+    'apiic_integration',
+    'single_desk',
+    'reporting',
+    'compliance',
 ]
 
+# Add in settings.py
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',  # ✅ Allows login via API UI
-        'rest_framework.authentication.BasicAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',  # ✅ Requires login
     ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
+
+# Add audit logging middleware
+class AuditLogMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if request.user.is_authenticated:
+            AuditLog.objects.create(
+                user=request.user,
+                action=request.method,
+                path=request.path,
+                status_code=response.status_code
+            )
+        return response
 
 
 MIDDLEWARE = [
@@ -104,6 +130,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'localization.middleware.LocalizationMiddleware',
+    'audit.middleware.AuditMiddleware',
 ]
 
 ROOT_URLCONF = 'ap_cws_portal.urls'
@@ -219,4 +247,25 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
     'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+# settings.py
+DPMS_CONFIG = {
+    'API_URL': 'https://dpms.ap.gov.in/api/v1/',  # Example URL
+    'API_KEY': 'your-dpms-api-key-here',
+    'TIMEOUT': 10,  # seconds
+    'RETRIES': 3,
+}
+
+# settings.py
+AUDIT_LOG_CONFIG = {
+    'DISABLE_LOGGING': False,  # Set to True to disable globally
+    'EXCLUDE_PATHS': ['/health/', '/status/'],
+}
+
+# settings.py
+SINGLE_DESK_CONFIG = {
+    'API_URL': 'https://singledesk.ap.gov.in/api/v1',  # Example URL
+    'API_KEY': 'your-api-key-here',
+    'TIMEOUT': 15,  # seconds
 }

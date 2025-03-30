@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 import Spaces from "./pages/Spaces";
 import Analytics from "./pages/Analytics";
 import Notifications from "./pages/Notifications";
@@ -13,42 +12,41 @@ function App() {
     !!localStorage.getItem("access_token")
   );
 
-  // Check auth status on initial load and storage changes
   useEffect(() => {
-    const checkAuth = () => {
+    const handleStorageChange = () => {
       setIsAuthenticated(!!localStorage.getItem("access_token"));
     };
 
-    checkAuth();
-    window.addEventListener('storage', checkAuth);
-    return () => window.removeEventListener('storage', checkAuth);
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   return (
     <Router>
       {isAuthenticated && <Navbar />}
-      <Routes>
-        <Route path="/" element={
-          <Navigate replace to={isAuthenticated ? "/dashboard" : "/login"} />
-        } />
-        <Route path="/login" element={
-          isAuthenticated ? <Navigate replace to="/dashboard" /> : <Login />
-        } />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={
-          isAuthenticated ? <Dashboard /> : <Navigate replace to="/login" />
-        } />
-        <Route path="/spaces" element={
-          isAuthenticated ? <Spaces /> : <Navigate replace to="/login" />
-        } />
-        <Route path="/analytics" element={
-          isAuthenticated ? <Analytics /> : <Navigate replace to="/login" />
-        } />
-        <Route path="/notifications" element={
-          isAuthenticated ? <Notifications /> : <Navigate replace to="/login" />
-        } />
-        <Route path="*" element={<h2 className="text-center text-red-500">404 Page Not Found</h2>} />
-      </Routes>
+      <div className={isAuthenticated ? "mt-16" : ""}> {/* Offset for fixed navbar */}
+        <Routes>
+          <Route path="/" element={
+            isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />
+          } />
+          <Route path="/login" element={
+            isAuthenticated ? <Navigate to="/home" /> : <Login />
+          } />
+          <Route path="/home" element={
+            isAuthenticated ? <Home /> : <Navigate to="/login" />
+          } />
+          <Route path="/spaces" element={
+            isAuthenticated ? <Spaces /> : <Navigate to="/login" />
+          } />
+          <Route path="/analytics" element={
+            isAuthenticated ? <Analytics /> : <Navigate to="/login" />
+          } />
+          <Route path="/notifications" element={
+            isAuthenticated ? <Notifications /> : <Navigate to="/login" />
+          } />
+          <Route path="*" element={<h1 className="text-center mt-10">404 Not Found</h1>} />
+        </Routes>
+      </div>
     </Router>
   );
 }

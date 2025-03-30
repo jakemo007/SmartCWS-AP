@@ -16,15 +16,6 @@ class SpaceProvider(models.Model):
     def __str__(self):
         return self.company_name
 
-class ULBVerification(models.Model):
-    space_provider = models.OneToOneField(SpaceProvider, on_delete=models.CASCADE, related_name="ulb_verification")
-    verified_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="verified_spaces")  # ✅ Fix reference
-    status = models.CharField(max_length=20, choices=[("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected")])
-    remarks = models.TextField(blank=True)
-    verified_at = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        return f"Verification for {self.space_provider.company_name} - {self.status}"
 
 class SpaceDetails(models.Model):
     space_provider = models.ForeignKey(SpaceProvider, on_delete=models.CASCADE, related_name="space_details")

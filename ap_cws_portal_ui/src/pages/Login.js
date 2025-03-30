@@ -13,10 +13,7 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -37,92 +34,86 @@ const Login = () => {
       localStorage.setItem("refresh_token", response.data.refresh);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       
-      // Using navigate properly with replace to prevent back navigation
-      navigate("/dashboard", { replace: true });
+      window.dispatchEvent(new Event('storage'));
+      navigate("/home");
       
     } catch (err) {
-      let errorMessage = "Login failed. Please try again.";
-      
-      if (err.response) {
-        if (err.response.status === 401) {
-          errorMessage = "Invalid username or password";
-        } else if (err.response.status >= 500) {
-          errorMessage = "Server error. Please try again later.";
-        }
-      } else if (err.request) {
-        errorMessage = "Network error. Please check your connection.";
-      }
-      
-      setError(errorMessage);
+      setError(err.response?.status === 401 
+        ? "Invalid credentials" 
+        : "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form 
-        onSubmit={handleSubmit} 
-        className="p-6 bg-white shadow-md rounded w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+        <div className="text-center">
+          <h2 className="text-3xl font-extrabold text-gray-900">Sign in</h2>
+        </div>
         
         {error && (
-          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
-            {error}
+          <div className="bg-red-50 border-l-4 border-red-500 p-4">
+            <div className="flex">
+              <div className="text-red-500">{error}</div>
+            </div>
           </div>
         )}
         
-        <div className="mb-4">
-          <label htmlFor="username" className="block text-sm font-medium mb-1">
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            placeholder="Enter your username"
-            className="border p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            required
-            onChange={handleChange}
-            disabled={isLoading}
-          />
-        </div>
-        
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            placeholder="Enter your password"
-            className="border p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            required
-            onChange={handleChange}
-            disabled={isLoading}
-          />
-        </div>
-        
-        <button 
-          type="submit" 
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded transition duration-200 disabled:opacity-50"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <span className="flex justify-center items-center">
-              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Logging in...
-            </span>
-          ) : "Login"}
-        </button>
-      </form>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="rounded-md shadow-sm space-y-4">
+            <div>
+              <label htmlFor="username" className="sr-only">Username</label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                required
+                className="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+                disabled={isLoading}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                isLoading ? "opacity-75 cursor-not-allowed" : ""
+              }`}
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Signing in...
+                </>
+              ) : "Sign in"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

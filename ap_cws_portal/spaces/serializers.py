@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import SpaceProvider, ULBVerification, SpaceDetails, Booking
+from .models import SpaceProvider, SpaceDetails, Booking
+# If you have spaces/serializers.py
+from ulb_verification.models import ULBVerification  # Instead of spaces.models
 
 # ✅ Space Provider Serializer
 class SpaceProviderSerializer(serializers.ModelSerializer):
