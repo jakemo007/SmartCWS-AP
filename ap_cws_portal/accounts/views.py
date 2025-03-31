@@ -24,14 +24,30 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ✅ User Login API (JWT)
+# class LoginView(APIView):
+#     permission_classes = [permissions.AllowAny]
+
+#     def post(self, request):
+#         serializer = LoginSerializer(data=request.data)
+#         if serializer.is_valid():
+#             return Response(serializer.validated_data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        print("🔍 Incoming login request:", request.data)
+
+        # Validate using the serializer
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
+            print("✅ Login Successful:", serializer.validated_data)
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+        print("❌ Login Failed:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
 
 # ✅ Admin Verification API
 class VerifyProviderView(APIView):

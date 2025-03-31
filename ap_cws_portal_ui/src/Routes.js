@@ -1,8 +1,7 @@
-// src/Routes.js
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { LoadingSpinner } from './components/LoadingSpinner';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import LoadingSpinner from './components/LoadingSpinner';
 
 // Lazy-loaded components
 const Login = lazy(() => import('./pages/Login'));
@@ -15,6 +14,17 @@ const Notifications = lazy(() => import('./pages/Notifications'));
 const Bookings = lazy(() => import('./pages/Bookings'));
 const Verification = lazy(() => import('./pages/Verification'));
 const Page404 = lazy(() => import('./pages/Page404'));
+
+const PrivateRouteWrapper = () => {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  return isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" replace state={{ from: location }} />
+  );
+};
 
 const AppRoutes = () => {
   return (
@@ -46,17 +56,6 @@ const AppRoutes = () => {
         </Suspense>
       </AuthProvider>
     </Router>
-  );
-};
-
-// Private Route Wrapper Component
-const PrivateRouteWrapper = () => {
-  const { isAuthenticated } = useAuth(); // Your authentication context hook
-
-  return isAuthenticated ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/login" replace state={{ from: location.pathname }} />
   );
 };
 

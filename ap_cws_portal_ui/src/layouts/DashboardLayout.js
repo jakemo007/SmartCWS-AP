@@ -1,8 +1,9 @@
+// src/layouts/DashboardLayout.js
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../pages/Sidebar';
-import Topbar from './Topbar';
+import Sidebar from '../components/Sidebar';
+import Topbar from '../components/Topbar';
 
-export default function DashboardLayout() {
+const DashboardLayout = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar />
@@ -14,4 +15,6 @@ export default function DashboardLayout() {
       </div>
     </div>
   );
-}
+};
+
+export default DashboardLayout;

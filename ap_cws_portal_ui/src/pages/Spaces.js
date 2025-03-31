@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import SpaceCard from '../components/SpaceCard';
-import SearchFilters from '../components/SearchFilters';
+import  SpaceCard from '../components/SpaceCard';
+import SearchFilters from '../components/SearchFilter';
 
 export default function Spaces() {
   const [spaces, setSpaces] = useState([]);

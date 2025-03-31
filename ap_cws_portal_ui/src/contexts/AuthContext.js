@@ -46,3 +46,6 @@ export function AuthProvider({ children }) {
 }
 
 export const useAuth = () => useContext(AuthContext);
+
+// Add default export for backward compatibility
+export default AuthProvider;

@@ -1,11 +1,17 @@
+// src/components/Sidebar.js
 import { NavLink } from 'react-router-dom';
-import { FiHome, FiMap, FiUsers, FiSettings, FiBell } from 'react-icons/fi';
+import { 
+  FiHome as HomeIcon,
+  FiMap as MapIcon,
+  FiUsers as UsersIcon,
+  FiBell as BellIcon 
+} from 'react-icons/fi';
 
 const navItems = [
-  { path: '/home', icon: <FiHome />, label: 'Home' },
-  { path: '/spaces', icon: <FiMap />, label: 'Spaces' },
-  { path: '/analytics', icon: <FiUsers />, label: 'Analytics' },
-  { path: '/notifications', icon: <FiBell />, label: 'Notifications' }
+  { path: '/home', icon: <HomeIcon />, label: 'Home' },
+  { path: '/spaces', icon: <MapIcon />, label: 'Spaces' },
+  { path: '/analytics', icon: <UsersIcon />, label: 'Analytics' },
+  { path: '/notifications', icon: <BellIcon />, label: 'Notifications' }
 ];
 
 export default function Sidebar() {
