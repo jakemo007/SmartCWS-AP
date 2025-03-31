@@ -1,37 +1,55 @@
-import React, { useEffect, useState } from "react";
-import api from "../services/api";
+import { useState, useEffect } from 'react';
+import api from '../services/api';
+import SpaceCard from '../components/SpaceCard';
+import SearchFilters from '../components/SearchFilters';
 
-const Spaces = () => {
+export default function Spaces() {
   const [spaces, setSpaces] = useState([]);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    district: '',
+    capacity: ''
+  });
 
   useEffect(() => {
     const fetchSpaces = async () => {
       try {
-        const response = await api.get("spaces/space-providers/");
+        const params = new URLSearchParams();
+        if (filters.district) params.append('district', filters.district);
+        if (filters.capacity) params.append('capacity', filters.capacity);
+        
+        const response = await api.get(`spaces/?${params.toString()}`);
         setSpaces(response.data);
       } catch (err) {
-        setError("Failed to fetch spaces. Please login again.");
+        console.error("Error fetching spaces:", err);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchSpaces();
-  }, []);
+  }, [filters]);
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold">Available Co-Working Spaces</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <ul>
-        {spaces.map((space) => (
-          <li key={space.id} className="p-4 bg-gray-100 rounded shadow-md my-2">
-            <h3 className="text-xl font-semibold">{space.company_name}</h3>
-            <p>{space.address}</p>
-            <p><strong>Seats Available:</strong> {space.available_seats}</p>
-          </li>
-        ))}
-      </ul>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Available Spaces</h1>
+        <SearchFilters onFilter={setFilters} />
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="bg-gray-100 rounded-lg h-48 animate-pulse"></div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {spaces.map(space => (
+            <SpaceCard key={space.id} space={space} />
+          ))}
+        </div>
+      )}
     </div>
   );
-};
-
-export default Spaces;
+}

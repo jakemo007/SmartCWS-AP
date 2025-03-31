@@ -1,33 +1,54 @@
-import React, { useEffect, useState } from "react";
-import api from "../services/api";
+import { useState, useEffect } from 'react';
+import api from '../services/api';
+import { BarChart, PieChart } from '../components/Charts';
 
-const Analytics = () => {
-  const [analytics, setAnalytics] = useState({ total_spaces: 0, total_seats: 0, occupied_seats: 0 });
-  const [error, setError] = useState("");
+export default function Analytics() {
+  const [data, setData] = useState(null);
+  const [timeRange, setTimeRange] = useState('week');
 
   useEffect(() => {
-    const fetchAnalytics = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get("analytics/government-dashboard/");
-        setAnalytics(response.data);
+        const response = await api.get(`analytics/?range=${timeRange}`);
+        setData(response.data);
       } catch (err) {
-        setError("Failed to fetch analytics data.");
+        console.error("Error fetching analytics:", err);
       }
     };
-    fetchAnalytics();
-  }, []);
+    fetchData();
+  }, [timeRange]);
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <div className="bg-gray-100 p-4 rounded shadow-md">
-        <p><strong>Total Spaces:</strong> {analytics.total_spaces}</p>
-        <p><strong>Total Seats:</strong> {analytics.total_seats}</p>
-        <p><strong>Occupied Seats:</strong> {analytics.occupied_seats}</p>
+    <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
+        <select 
+          value={timeRange}
+          onChange={(e) => setTimeRange(e.target.value)}
+          className="border rounded-md px-3 py-1 text-sm"
+        >
+          <option value="week">Last Week</option>
+          <option value="month">Last Month</option>
+          <option value="quarter">Last Quarter</option>
+        </select>
       </div>
+
+      {data ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white p-4 rounded-lg shadow">
+            <h2 className="font-semibold mb-3">Space Utilization</h2>
+            <BarChart data={data.occupancy} />
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow">
+            <h2 className="font-semibold mb-3">District Distribution</h2>
+            <PieChart data={data.districts} />
+          </div>
+        </div>
+      ) : (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+      )}
     </div>
   );
-};
-
-export default Analytics;
+}
